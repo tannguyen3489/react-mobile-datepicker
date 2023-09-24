@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import CalendarContainer from "./calendar_container";
 import DatePicker from "react-mobile-datepicker";
+
 import {
   newDate,
   setMonth,
@@ -51,6 +52,21 @@ const DROPDOWN_FOCUS_CLASSNAMES = [
   "react-datepicker__month-select",
   "react-datepicker__month-year-select",
 ];
+
+const monthMap = {
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
+};
 
 const isDropdownSelect = (element = {}) => {
   const classNames = (element.className || "").split(/\s+/);
@@ -314,6 +330,7 @@ export default class Calendar extends React.Component {
   };
 
   handleDayClick = (day, event, monthSelectedIn) => {
+    console.info("handleDayClick", day, event, monthSelectedIn);
     this.props.onSelect(day, event, monthSelectedIn);
     this.props.setPreSelection && this.props.setPreSelection(day);
   };
@@ -671,7 +688,7 @@ export default class Calendar extends React.Component {
     }
     return (
       <div onClick={this.toggleMobileMonthPicker} className={classes.join(" ")}>
-        {formatDate(date, this.props.dateFormat, this.props.locale)} tan ne 2
+        {formatDate(date, this.props.dateFormat, this.props.locale)}
       </div>
     );
   };
@@ -1012,6 +1029,15 @@ export default class Calendar extends React.Component {
     }
   };
 
+  ignoreClickOutSideEvent = () => {
+    setTimeout(() => {
+      const collection = document.getElementsByClassName("Modal-Portal");
+      for (let i = 0; i < collection.length; i++) {
+        collection[i].classList.add("react-datepicker-ignore-onclickoutside");
+      }
+    }, 200);
+  };
+
   renderInputTimeSection = () => {
     const time = new Date(this.props.selected);
     const timeValid = isValid(time) && Boolean(this.props.selected);
@@ -1075,30 +1101,46 @@ export default class Calendar extends React.Component {
 
   handleMobileMonthPickerClick = () => {
     this.setState({ isShowMobileMonthPicker: true });
+    document.body.classList.add("no-scroll");
   };
 
   handleMobileMonthPickerCancel = () => {
-    this.setState({ isShowMobileMonthPicker: false });
+    this.setState({ isShowMobileMonthPicker: false }, () => {
+      this.ignoreClickOutSideEvent();
+    });
+    document.body.classList.remove("no-scroll");
   };
 
   handleMobileMonthPickerSelect = (time) => {
     debugger;
-    console.info("handleMobileMonthPickerSelect", time);
+    console.info("handleMobileMonthPickerSelect 1", time);
     // this.setState({ date: time, isShowMobileMonthPicker: false });
 
     this.setState(
       {
         date: time,
+        isShowMobileMonthPicker: false,
       },
-      () => this.handleMonthChange(this.state.date),
+      () => this.handleDayClick(this.state.date, null, 0),
+      // () => {},
     );
   };
 
   toggleMobileMonthPicker = () => {
     console.info("toggleMobileMonthPicker");
-    this.setState({
-      isShowMobileMonthPicker: !this.state.isShowMobileMonthPicker,
-    });
+    this.setState(
+      {
+        isShowMobileMonthPicker: !this.state.isShowMobileMonthPicker,
+      },
+      () => {
+        this.ignoreClickOutSideEvent();
+        if (this.state.isShowMobileMonthPicker) {
+          document.body.classList.add("no-scroll");
+        } else {
+          document.body.classList.remove("no-scroll");
+        }
+      },
+    );
   };
 
   render() {
@@ -1123,30 +1165,34 @@ export default class Calendar extends React.Component {
           {this.renderChildren()}
         </Container>
 
-        <DatePicker
-          // dateConfig={{
-          //   'month': {
-          //     format: 'MM',
-          //     caption: 'Mon',
-          //     step: 1,
-          //   },
-          //   'year': {
-          //     format: 'YYYY',
-          //     caption: 'Year',
-          //     step: 1,
-          //   },
-          // }}
-          showHeader={false}
-          showFooter={true}
-          min={this.props.minDate}
-          max={this.props.maxDate}
-          confirmText={this.props.confirmText}
-          cancelText={this.props.cancelText}
-          // value={this.state.date}
-          isOpen={this.state.isShowMobileMonthPicker}
-          onSelect={this.handleMobileMonthPickerSelect}
-          onCancel={this.handleMobileMonthPickerCancel}
-        />
+        {this.state.isShowMobileMonthPicker && (
+          <DatePicker
+            dateConfig={{
+              month: {
+                format: (value) => monthMap[value.getMonth() + 1],
+                caption: "Mon",
+                step: 1,
+              },
+              year: {
+                format: "YYYY",
+                caption: "Year",
+                step: 1,
+              },
+            }}
+            className="inside-mobile-month-picker react-datepicker-ignore-onclickoutside"
+            showHeader={false}
+            showFooter={true}
+            isPopup={true}
+            min={this.props.minDate}
+            max={this.props.maxDate}
+            confirmText={this.props.confirmText}
+            cancelText={this.props.cancelText}
+            value={this.state.date}
+            isOpen={this.state.isShowMobileMonthPicker}
+            onSelect={this.handleMobileMonthPickerSelect}
+            onCancel={this.handleMobileMonthPickerCancel}
+          />
+        )}
       </div>
     );
   }

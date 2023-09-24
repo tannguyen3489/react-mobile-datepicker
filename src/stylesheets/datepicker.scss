@@ -710,3 +710,46 @@
   height: 1em;
   vertical-align: -0.125em;
 }
+
+.Modal-Portal.react-datepicker-ignore-onclickoutside {
+  .datepicker-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .datepicker.default {
+      display: flex;
+      flex-direction: column-reverse;
+
+      .datepicker-navbar {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row-reverse;
+      }
+
+      .datepicker-content {
+        .datepicker-col-1:first-child {
+          text-align: left;
+          .datepicker-scroll {
+            margin-left: 0;
+          }
+        }
+
+        .datepicker-col-1:last-child {
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh !important;
+}

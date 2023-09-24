@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "browser": "dist/react-datepicker.min.js",
   "module": "dist/es/index.js",
-  "unpkg": "dist/react-datepicker.min.js",
+  "unpkg": "dist/react-datepicker.  min.js",
   "style": "dist/react-datepicker.min.css",
   "files": [
     "*.md",
