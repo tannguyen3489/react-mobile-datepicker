@@ -9,6 +9,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import CalendarContainer from "./calendar_container";
+import DatePicker from "react-mobile-datepicker";
 import {
   newDate,
   setMonth,
@@ -71,6 +72,8 @@ export default class Calendar extends React.Component {
       nextMonthButtonLabel: "Next Month",
       customTimeInput: null,
       yearItemNumber: DEFAULT_YEAR_ITEM_NUMBER,
+      cancelText: "Cancel",
+      confirmText: "Save",
     };
   }
 
@@ -218,6 +221,7 @@ export default class Calendar extends React.Component {
       selectingDate: null,
       monthContainer: null,
       isRenderAriaLiveMessage: false,
+      isShowMobileMonthPicker: false,
     };
   }
 
@@ -666,8 +670,8 @@ export default class Calendar extends React.Component {
       classes.push("react-datepicker__current-month--hasMonthYearDropdown");
     }
     return (
-      <div className={classes.join(" ")}>
-        {formatDate(date, this.props.dateFormat, this.props.locale)}
+      <div onClick={this.toggleMobileMonthPicker} className={classes.join(" ")}>
+        {formatDate(date, this.props.dateFormat, this.props.locale)} tan ne 2
       </div>
     );
   };
@@ -1069,6 +1073,34 @@ export default class Calendar extends React.Component {
     }
   };
 
+  handleMobileMonthPickerClick = () => {
+    this.setState({ isShowMobileMonthPicker: true });
+  };
+
+  handleMobileMonthPickerCancel = () => {
+    this.setState({ isShowMobileMonthPicker: false });
+  };
+
+  handleMobileMonthPickerSelect = (time) => {
+    debugger;
+    console.info("handleMobileMonthPickerSelect", time);
+    // this.setState({ date: time, isShowMobileMonthPicker: false });
+
+    this.setState(
+      {
+        date: time,
+      },
+      () => this.handleMonthChange(this.state.date),
+    );
+  };
+
+  toggleMobileMonthPicker = () => {
+    console.info("toggleMobileMonthPicker");
+    this.setState({
+      isShowMobileMonthPicker: !this.state.isShowMobileMonthPicker,
+    });
+  };
+
   render() {
     const Container = this.props.container || CalendarContainer;
     return (
@@ -1090,6 +1122,31 @@ export default class Calendar extends React.Component {
           {this.renderInputTimeSection()}
           {this.renderChildren()}
         </Container>
+
+        <DatePicker
+          // dateConfig={{
+          //   'month': {
+          //     format: 'MM',
+          //     caption: 'Mon',
+          //     step: 1,
+          //   },
+          //   'year': {
+          //     format: 'YYYY',
+          //     caption: 'Year',
+          //     step: 1,
+          //   },
+          // }}
+          showHeader={false}
+          showFooter={true}
+          min={this.props.minDate}
+          max={this.props.maxDate}
+          confirmText={this.props.confirmText}
+          cancelText={this.props.cancelText}
+          // value={this.state.date}
+          isOpen={this.state.isShowMobileMonthPicker}
+          onSelect={this.handleMobileMonthPickerSelect}
+          onCancel={this.handleMobileMonthPickerCancel}
+        />
       </div>
     );
   }

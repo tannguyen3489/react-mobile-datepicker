@@ -101,7 +101,7 @@ import ExternalForm from "../../examples/externalForm";
 import CalendarIcon from "../../examples/calendarIcon";
 
 import "./style.scss";
-import "react-datepicker/dist/react-datepicker.css";
+import "../../../../src/stylesheets/datepicker.scss";
 
 export default class exampleComponents extends React.Component {
   componentDidMount() {
