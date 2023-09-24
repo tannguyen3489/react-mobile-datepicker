@@ -1121,7 +1121,8 @@ export default class Calendar extends React.Component {
         date: time,
         isShowMobileMonthPicker: false,
       },
-      () => this.handleDayClick(this.state.date, null, 0),
+      // () => this.handleDayClick(this.state.date, null, 0),
+      () => this.handleMonthChange(this.state.date, null, 0),
       // () => {},
     );
   };
