@@ -753,3 +753,45 @@
   overflow: hidden !important;
   height: 100vh !important;
 }
+
+.Modal-Portal .datepicker.default {
+  box-shadow: 0px -10px 20px 0px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 32px 32px 0 0;
+  padding-top: 15px;
+  font-family: "Noto Sans KR", "Inter", Arial, serif;
+}
+.Modal-Portal .datepicker.default .datepicker-navbar-btn {
+  color: #37bff9;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.Modal-Portal .datepicker.default .datepicker-scroll li {
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+}
+.Modal-Portal .datepicker.default .datepicker-content {
+  padding: 0 20px 10px;
+  position: relative;
+}
+.Modal-Portal .datepicker.default .datepicker-wheel {
+  border: none;
+  background: #f3f2f3;
+  padding: 0 0 0 10px;
+  border-radius: 10px 0 0 10px;
+}
+.Modal-Portal .datepicker.default .datepicker-col-1 {
+  margin: 0 !important;
+}
+.Modal-Portal
+  .datepicker.default
+  .datepicker-col-1:last-child
+  .datepicker-wheel {
+  padding: 0 10px 0 0 !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+.Modal-Portal .datepicker-modal {
+  background: transparent !important;
+}
