@@ -12,39 +12,39 @@ import CalendarContainer from "./calendar_container";
 import DatePicker from "react-mobile-datepicker";
 
 import {
-  newDate,
-  setMonth,
-  getMonth,
-  addMonths,
-  subMonths,
-  getStartOfWeek,
-  getStartOfToday,
   addDays,
-  formatDate,
-  setYear,
-  getYear,
-  isBefore,
+  addMonths,
   addYears,
-  subYears,
-  isAfter,
+  addZero,
+  DEFAULT_YEAR_ITEM_NUMBER,
+  formatDate,
+  getEffectiveMaxDate,
+  getEffectiveMinDate,
   getFormattedWeekdayInLocale,
-  getWeekdayShortInLocale,
+  getMonth,
+  getMonthInLocale,
+  getStartOfToday,
+  getStartOfWeek,
   getWeekdayMinInLocale,
+  getWeekdayShortInLocale,
+  getYear,
+  getYearsPeriod,
+  isAfter,
+  isBefore,
   isSameDay,
   isSameMonth,
-  monthDisabledBefore,
+  isValid,
   monthDisabledAfter,
-  yearDisabledBefore,
+  monthDisabledBefore,
+  newDate,
+  setMonth,
+  setYear,
+  subMonths,
+  subYears,
   yearDisabledAfter,
+  yearDisabledBefore,
   yearsDisabledAfter,
   yearsDisabledBefore,
-  getEffectiveMinDate,
-  getEffectiveMaxDate,
-  addZero,
-  isValid,
-  getYearsPeriod,
-  DEFAULT_YEAR_ITEM_NUMBER,
-  getMonthInLocale,
 } from "./date_utils";
 
 const DROPDOWN_FOCUS_CLASSNAMES = [
@@ -66,6 +66,36 @@ const monthMap = {
   10: "October",
   11: "November",
   12: "December",
+};
+
+const monthMapKo = {
+  1: "1월",
+  2: "2월",
+  3: "3월",
+  4: "4월",
+  5: "5월",
+  6: "6월",
+  7: "7월",
+  8: "8월",
+  9: "9월",
+  10: "10월",
+  11: "11월",
+  12: "12월",
+};
+
+const monthMapVi = {
+  1: "Tháng 1",
+  2: "Tháng 2",
+  3: "Tháng 3",
+  4: "Tháng 4",
+  5: "Tháng 5",
+  6: "Tháng 6",
+  7: "Tháng 7",
+  8: "Tháng 8",
+  9: "Tháng 9",
+  10: "Tháng 10",
+  11: "Tháng 11",
+  12: "Tháng 12",
 };
 
 const isDropdownSelect = (element = {}) => {
@@ -1146,6 +1176,30 @@ export default class Calendar extends React.Component {
 
   render() {
     const Container = this.props.container || CalendarContainer;
+
+    const localeCalendar = this.props.locale || "en";
+
+    console.info("Local " + this.props.locale);
+
+    let monthMapLocale = monthMap;
+    let cancelText = "Cancel";
+    let confirmText = "Save";
+    switch (localeCalendar) {
+      case "vi":
+        monthMapLocale = monthMapVi;
+        cancelText = "Đóng";
+        confirmText = "Lưu";
+        break;
+      case "ko":
+        monthMapLocale = monthMapKo;
+        cancelText = "취소";
+        confirmText = "저장";
+        break;
+      default:
+        monthMapLocale = monthMap;
+        break;
+    }
+
     return (
       <div ref={this.containerRef}>
         <Container
@@ -1170,7 +1224,7 @@ export default class Calendar extends React.Component {
           <DatePicker
             dateConfig={{
               month: {
-                format: (value) => monthMap[value.getMonth() + 1],
+                format: (value) => monthMapLocale[value.getMonth() + 1],
                 caption: "Mon",
                 step: 1,
               },
@@ -1186,8 +1240,8 @@ export default class Calendar extends React.Component {
             isPopup={true}
             min={this.props.minDate}
             max={this.props.maxDate}
-            confirmText={this.props.confirmText}
-            cancelText={this.props.cancelText}
+            confirmText={confirmText}
+            cancelText={cancelText}
             value={this.state.date}
             isOpen={this.state.isShowMobileMonthPicker}
             onSelect={this.handleMobileMonthPickerSelect}
